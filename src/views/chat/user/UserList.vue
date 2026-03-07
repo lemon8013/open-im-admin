@@ -155,6 +155,7 @@ async function loadData() {
   try {
     const res = await searchUserFull({
       keyword: searchForm.keyword,
+      normal: 1,
       pagination: { pageNumber: pagination.page, showNumber: pagination.size }
     })
     const data = res.data || res

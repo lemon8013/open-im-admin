@@ -43,11 +43,55 @@
     </div>
 
     <!-- 添加用户对话框 -->
-    <el-dialog v-model="addDialogVisible" title="添加默认好友" width="400px">
-      <el-input v-model="addUserIDs" type="textarea" :rows="4" placeholder="请输入用户ID，多个用逗号分隔" />
+    <el-dialog v-model="addDialogVisible" title="添加默认好友" width="600px" @open="onDialogOpen">
+      <el-form :inline="true" class="search-form" @submit.prevent="searchUsers">
+        <el-form-item>
+          <el-input v-model="dialogSearch" placeholder="搜索用户昵称/手机号/ID" clearable @keyup.enter="searchUsers" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchUsers">搜索</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-table
+        ref="selectTableRef"
+        :data="userList"
+        v-loading="userListLoading"
+        border
+        stripe
+        max-height="360"
+        @selection-change="handleSelectionChange"
+      >
+        <el-table-column type="selection" width="50" />
+        <el-table-column label="头像" width="60" align="center">
+          <template #default="{ row }">
+            <el-avatar :src="row.faceURL" :size="32">{{ (row.nickname || '')[0] }}</el-avatar>
+          </template>
+        </el-table-column>
+        <el-table-column prop="nickname" label="昵称" />
+        <el-table-column prop="userID" label="用户ID" min-width="180" />
+        <el-table-column prop="phoneNumber" label="手机号" />
+      </el-table>
+
+      <div class="dialog-pagination">
+        <el-pagination
+          v-model:current-page="dialogPagination.page"
+          v-model:page-size="dialogPagination.size"
+          :total="dialogPagination.total"
+          layout="total, prev, pager, next"
+          :page-sizes="[10, 20]"
+          small
+          @change="searchUsers"
+        />
+      </div>
+
+      <div v-if="selectedUsers.length" class="selected-info">
+        已选择 <strong>{{ selectedUsers.length }}</strong> 个用户
+      </div>
+
       <template #footer>
         <el-button @click="addDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="addUsers">确定</el-button>
+        <el-button type="primary" :disabled="!selectedUsers.length" @click="addUsers">确定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -57,13 +101,21 @@
 import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { searchDefaultFriend, addDefaultFriend, delDefaultFriend } from '@/api/register'
+import { searchUserFull } from '@/api/user'
 
 const loading = ref(false)
 const tableData = ref([])
 const searchForm = reactive({ userID: '' })
 const pagination = reactive({ page: 1, size: 10, total: 0 })
 const addDialogVisible = ref(false)
-const addUserIDs = ref('')
+
+// 对话框中的用户搜索
+const dialogSearch = ref('')
+const userList = ref([])
+const userListLoading = ref(false)
+const selectedUsers = ref([])
+const selectTableRef = ref(null)
+const dialogPagination = reactive({ page: 1, size: 10, total: 0 })
 
 onMounted(() => loadData())
 
@@ -91,12 +143,42 @@ function resetSearch() {
 }
 
 function showAddDialog() {
-  addUserIDs.value = ''
+  dialogSearch.value = ''
+  userList.value = []
+  selectedUsers.value = []
+  dialogPagination.page = 1
+  dialogPagination.total = 0
   addDialogVisible.value = true
 }
 
+function onDialogOpen() {
+  searchUsers()
+}
+
+async function searchUsers() {
+  userListLoading.value = true
+  try {
+    const res = await searchUserFull({
+      keyword: dialogSearch.value,
+      normal: 1,
+      pagination: { pageNumber: dialogPagination.page, showNumber: dialogPagination.size }
+    })
+    const data = res.data || res
+    userList.value = data.users || []
+    dialogPagination.total = data.total || 0
+  } catch (err) {
+    console.error(err)
+  } finally {
+    userListLoading.value = false
+  }
+}
+
+function handleSelectionChange(rows) {
+  selectedUsers.value = rows
+}
+
 async function addUsers() {
-  const ids = addUserIDs.value.split(',').map(s => s.trim()).filter(Boolean)
+  const ids = selectedUsers.value.map(u => u.userID)
   if (!ids.length) return
   try {
     await addDefaultFriend(ids)
@@ -124,4 +206,6 @@ async function removeUser(userID) {
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .search-form { margin-bottom: 16px; }
 .pagination-wrap { margin-top: 16px; display: flex; justify-content: flex-end; }
+.dialog-pagination { margin-top: 12px; display: flex; justify-content: flex-end; }
+.selected-info { margin-top: 10px; font-size: 13px; color: #606266; }
 </style>
