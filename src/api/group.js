@@ -27,13 +27,13 @@ export function cancelMuteGroup(groupID) {
 }
 
 // 解散群组
-export function dismissGroup(data) {
-  return imRequest.post('/group/dismiss_group', data)
+export function dismissGroup(groupID) {
+  return imRequest.post('/group/dismiss_group', { groupID: groupID })
 }
 
 // 获取群成员列表
 export function getGroupMembers(data) {
-  return imRequest.post('/group/get_group_members', data)
+  return imRequest.post('/group/get_group_member_list', data)
 }
 
 // 踢出群成员

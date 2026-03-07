@@ -367,7 +367,7 @@ async function submitForm() {
 }
 
 function viewMembers(row) {
-  router.push({ path: '/im/group/group_member', query: { groupID: row.groupInfo?.groupID } })
+  router.push({ path: '/im/group/group_member', query: { groupID: row.groupInfo?.groupID, groupName: row.groupInfo?.groupName } })
 }
 
 async function toggleMute(row) {

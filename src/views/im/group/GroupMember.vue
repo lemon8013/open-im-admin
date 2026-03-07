@@ -1,7 +1,7 @@
 <template>
   <div class="page-container">
     <div class="page-header">
-      <h3>群成员 - {{ groupID }}</h3>
+      <h3>群成员 - {{ groupName }}</h3>
       <el-button @click="$router.back()">返回</el-button>
     </div>
 
@@ -65,6 +65,7 @@ import { getGroupMembers, kickGroupMember } from '@/api/group'
 
 const route = useRoute()
 const groupID = route.query.groupID || ''
+const groupName = route.query.groupName || ''
 const loading = ref(false)
 const tableData = ref([])
 const searchForm = reactive({ keyword: '' })
