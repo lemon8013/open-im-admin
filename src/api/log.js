@@ -2,7 +2,7 @@ import { imRequest } from './request'
 
 // 获取日志列表
 export function searchLogs(data) {
-  return imRequest.post('/logs/search', data)
+  return imRequest.post('/third/logs/search', data)
 }
 
 // 删除日志

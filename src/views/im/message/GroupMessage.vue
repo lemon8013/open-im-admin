@@ -15,7 +15,7 @@
     </el-form>
 
     <el-table :data="tableData" v-loading="loading" border stripe>
-      <el-table-column type="index" label="#" width="60" />
+      <el-table-column type="index" label="序号" width="60" />
       <el-table-column prop="sendID" label="发送者ID" min-width="200" />
       <el-table-column prop="senderNickname" label="发送者昵称" />
       <el-table-column prop="groupID" label="群组ID" min-width="200" />

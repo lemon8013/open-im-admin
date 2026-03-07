@@ -15,7 +15,7 @@
     </el-form>
 
     <el-table :data="tableData" v-loading="loading" border stripe>
-      <el-table-column type="index" label="#" width="60" />
+      <el-table-column type="index" label="序号" width="60" />
       <el-table-column prop="userID" label="用户ID" min-width="200" />
       <el-table-column prop="nickname" label="昵称" />
       <el-table-column prop="filename" label="文件名" min-width="200" />
