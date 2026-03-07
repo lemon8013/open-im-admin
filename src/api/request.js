@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 import { IM_URL, CHAT_URL, CHAT_ADMIN_URL } from '@/config'
 import router from '@/router'
 
@@ -29,14 +30,34 @@ function createRequest(baseURL, tokenKey) {
       if (data.errCode === 0) {
         return data
       }
-      // token 失效，跳转登录
+      // token 失效，提示后跳转登录
       if (data.errCode === 1001 || data.errCode === 1004) {
+        ElMessage.error('登录已过期，请重新登录')
         localStorage.clear()
         router.push('/login')
+        return Promise.reject(data)
       }
+      // 其他业务错误，提示错误信息，不跳转登录
+      const errMsg = data.errMsg || data.errDlt || '请求失败'
+      ElMessage.error(errMsg)
       return Promise.reject(data)
     },
     (error) => {
+      // 网络错误 / 超时等
+      if (error.response) {
+        const status = error.response.status
+        if (status === 401) {
+          ElMessage.error('登录已过期，请重新登录')
+          localStorage.clear()
+          router.push('/login')
+        } else {
+          ElMessage.error(`请求错误 (${status})`)
+        }
+      } else if (error.code === 'ECONNABORTED') {
+        ElMessage.error('请求超时，请稍后重试')
+      } else {
+        ElMessage.error('网络异常，请检查网络连接')
+      }
       return Promise.reject(error)
     }
   )
