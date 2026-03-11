@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { IM_URL, CHAT_URL, CHAT_ADMIN_URL } from '@/config'
-import router from '@/router'
+import { IM_URL, CHAT_ADMIN_URL } from '@/config'
 
 // 生成 operationID
 function genOperationID() {
@@ -52,12 +51,9 @@ function createRequest(baseURL, tokenKey) {
   return instance
 }
 
-// 三个 API 实例
+// IM 服务实例
 // imRequest -> /api (IM 服务)，使用 IMAdminToken
 export const imRequest = createRequest(IM_URL, 'IMAdminToken')
 
-// chatRequest -> /chat (Chat 服务)，使用 IMAccountToken
-export const chatRequest = createRequest(CHAT_URL, 'IMAccountToken')
-
-// chatAdminRequest -> /complete_admin (Chat Admin 服务)，使用 IMAccountToken
+// chatAdminRequest -> /complete_admin (管理员账号认证服务)，使用 IMAccountToken
 export const chatAdminRequest = createRequest(CHAT_ADMIN_URL, 'IMAccountToken')

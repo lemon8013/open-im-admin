@@ -163,15 +163,6 @@
 
     <!-- 用户选择对话框 -->
     <el-dialog v-model="userPickerVisible" :title="userPickerTitle" width="620px" @open="onUserPickerOpen">
-      <el-form :inline="true" class="search-form" @submit.prevent="searchPickerUsers">
-        <el-form-item>
-          <el-input v-model="pickerSearch" placeholder="搜索用户昵称/手机号/ID" clearable @keyup.enter="searchPickerUsers" @clear="searchPickerUsers" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="searchPickerUsers">搜索</el-button>
-        </el-form-item>
-      </el-form>
-
       <el-table
         ref="pickerTableRef"
         :data="pickerUserList"
@@ -226,7 +217,7 @@ import { ref, reactive, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getGroups, createGroup, setGroupInfo, muteGroup, cancelMuteGroup, dismissGroup as dismissGroupApi } from '@/api/group'
-import { searchUserFull } from '@/api/user'
+import { getUsers } from '@/api/user'
 
 const router = useRouter()
 const loading = ref(false)
@@ -256,7 +247,6 @@ const selectedAdmins = ref([])
 // 用户选择器对话框
 const userPickerVisible = ref(false)
 const pickerMode = ref('owner') // 'owner' | 'member' | 'admin'
-const pickerSearch = ref('')
 const pickerUserList = ref([])
 const pickerLoading = ref(false)
 const pickerSelected = ref([])
@@ -398,7 +388,6 @@ async function dismissGroup(row) {
 // ========== 用户选择器逻辑 ==========
 function openUserPicker(mode) {
   pickerMode.value = mode
-  pickerSearch.value = ''
   pickerUserList.value = []
   pickerSelected.value = []
   pickerPagination.page = 1
@@ -413,9 +402,7 @@ function onUserPickerOpen() {
 async function searchPickerUsers() {
   pickerLoading.value = true
   try {
-    const res = await searchUserFull({
-      keyword: pickerSearch.value,
-      normal: 1,
+    const res = await getUsers({
       pagination: { pageNumber: pickerPagination.page, showNumber: pickerPagination.size }
     })
     const data = res.data || res

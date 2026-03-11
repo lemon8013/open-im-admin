@@ -1,33 +1,4 @@
-import { chatRequest, chatAdminRequest, imRequest } from './request'
-
-// ==================== Chat 用户 API (chatRequest → /chat) ====================
-
-// 封禁用户 baseURL: js = /complete_admin
-export function blockUser(data) {
-  return chatAdminRequest.post('/block/add', data)
-}
-
-// 搜索用户（完整信息） baseURL: bt = /chat
-export function searchUserFull(data) {
-  return chatRequest.post('/user/search/full', data)
-}
-
-// 更新用户信息（Chat 服务） baseURL: bt = /chat
-export function updateUserInfo(data) {
-  return chatRequest.post('/user/update', data)
-}
-
-// ==================== Chat Admin 用户 API (chatAdminRequest → /complete_admin) ====================
-
-// 重置密码 baseURL: js = /complete_admin
-export function resetUserPassword(data) {
-  return chatAdminRequest.post('/user/password/reset', data)
-}
-
-// 导入用户 baseURL: js = /complete_admin
-export function importUsers(data) {
-  return chatAdminRequest.post('/user/import/json', data)
-}
+import { imRequest } from './request'
 
 // ==================== IM 用户 API (imRequest → /api) ====================
 

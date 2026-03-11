@@ -21,26 +21,6 @@
           class="layout-menu"
           @select="onMenuSelect"
         >
-          <!-- Chat 用户管理 -->
-          <el-sub-menu index="chat-user">
-            <template #title>
-              <el-icon><User /></el-icon>
-              <span>用户管理</span>
-            </template>
-            <el-menu-item index="/chat/user/user_list">用户列表</el-menu-item>
-            <el-menu-item index="/chat/user/block_list">黑名单</el-menu-item>
-          </el-sub-menu>
-
-          <!-- 注册设置 -->
-          <el-sub-menu index="chat-register">
-            <template #title>
-              <el-icon><Setting /></el-icon>
-              <span>注册设置</span>
-            </template>
-            <el-menu-item index="/chat/register/default_friends">默认好友</el-menu-item>
-            <el-menu-item index="/chat/register/default_group">默认群组</el-menu-item>
-          </el-sub-menu>
-
           <!-- IM 用户 -->
           <el-sub-menu index="im-user">
             <template #title>

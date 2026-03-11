@@ -10,34 +10,8 @@ const routes = [
   {
     path: '/',
     component: () => import('@/layouts/MainLayout.vue'),
-    redirect: '/chat/user/user_list',
+    redirect: '/im/user/user_list',
     children: [
-      // ===== Chat 模块 =====
-      {
-        path: 'chat/user/user_list',
-        name: 'ChatUserList',
-        component: () => import('@/views/chat/user/UserList.vue'),
-        meta: { title: '用户列表' },
-      },
-      {
-        path: 'chat/user/block_list',
-        name: 'ChatBlockList',
-        component: () => import('@/views/chat/user/BlockList.vue'),
-        meta: { title: '黑名单' },
-      },
-      {
-        path: 'chat/register/default_friends',
-        name: 'DefaultFriends',
-        component: () => import('@/views/chat/register/DefaultFriends.vue'),
-        meta: { title: '默认好友' },
-      },
-      {
-        path: 'chat/register/default_group',
-        name: 'DefaultGroup',
-        component: () => import('@/views/chat/register/DefaultGroup.vue'),
-        meta: { title: '默认群组' },
-      },
-
       // ===== IM 模块 =====
       {
         path: 'im/user/user_list',
